@@ -3,12 +3,12 @@ import imp
 from socket import AddressInfo
 from django.shortcuts import render
 from rest_framework import status
-from .models import  Batch, Domain, Users
+from .models import  Batch, Domain, Task, Users
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view,permission_classes,authentication_classes
 
-from .serializers import  BatchSerializers, BatchSerializersRead, DomainSerializers,AdvisorsSerializers,TaskSerializers
+from .serializers import  BatchSerializers, BatchSerializersRead, DomainSerializers,AdvisorsSerializers,TaskSerializers, TaskViewSerializers
 from rest_framework.response import Response
 from django.core.mail import send_mail
 from rest_framework.authentication import TokenAuthentication
@@ -17,6 +17,8 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+
+from Admin import serializers
 # Create your views here.
 
 
@@ -146,9 +148,16 @@ def add_batch(request):
 
 @api_view(['POST'])
 def add_task(request):
-    print()
+    
     seralizer = TaskSerializers(data=request.data,partial=True)
     if seralizer.is_valid():
         seralizer.save()
         return Response("data saved")
     return Response('error')
+
+
+@api_view(['POST'])
+def task_view(request):
+    task = Task.objects.all()
+    serializers = TaskViewSerializers(task, many=True)
+    return Response(serializers.data)

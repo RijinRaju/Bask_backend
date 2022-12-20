@@ -5,14 +5,12 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from rest_framework import status
-from Admin.models import Users
+from Admin.models import Task, Users
 from Admin.serializers import AdvisorsSerializers
-from .serializers import ProfileSerializers, SignupSerializers
+from .serializers import ProfileSerializers, SignupSerializers, TaskViewSerializers
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-
-from Students import serializers
 # Create your views here.
 
 
@@ -25,10 +23,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
 
         return token
-
-
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
 
 @api_view(['POST'])
 def signUp(request):
@@ -45,7 +42,6 @@ def signUp(request):
         student = Users.objects.get(email=email)
         student.role = "Student"
         student.save() 
-       
         return Response("user created")
     else:
         print("errors in python",serializer.errors)
@@ -58,7 +54,6 @@ def login(request):
     email = data.get('email',None)
     password = data.get('password',None)
     student = authenticate(email=email,password=password)
-   
     if student:
         student_token = Users.objects.get(email=email)
         stu_token, _ = Token.objects.get_or_create(user=student_token)
@@ -73,7 +68,6 @@ def profile(request):
     print(id)
     student = Users.objects.get(id=id)
     serializers = ProfileSerializers(student)
-
     return Response(serializers.data)
 
 
@@ -81,3 +75,14 @@ def profile(request):
 def profile_update(request):
 
     return Response("data received")
+
+
+@api_view(['POST'])
+def task_view(request):
+    id = request.data.get('id',None)
+    print(id)
+    student = Users.objects.get(id=id)
+    domain_id = student.domain_name.id
+    task = Task.objects.filter(domain=domain_id)
+    serializers = TaskViewSerializers(task,many=True)
+    return Response(serializers.data)

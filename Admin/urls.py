@@ -18,7 +18,8 @@ urlpatterns = [
     path('remove_advisor',views.remove_advisors,name="remove_advisor"),
     path('add_batch',views.add_batch,name="add_batch"),
     path('batch_list',views.batch_list,name="batch_list"),
-    path('add_task',views.add_task,name="add_task")
+    path('add_task',views.add_task,name="add_task"),
+    path('task_view',views.task_view,name="task_view"),
     
     
 

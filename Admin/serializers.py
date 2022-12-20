@@ -1,4 +1,4 @@
-from dataclasses import fields
+from dataclasses import field, fields
 from pyexpat import model
 from .models import Domain,Batch, Task, Users
 from rest_framework import serializers
@@ -49,3 +49,8 @@ class TaskSerializers(serializers.ModelSerializer):
         model = Task
         fields = '__all__'
 
+class TaskViewSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = "__all__"
+        depth = 1

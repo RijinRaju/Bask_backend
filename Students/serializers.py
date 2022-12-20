@@ -2,7 +2,7 @@ from dataclasses import fields
 from pyexpat import model
 from wsgiref import validate
 from rest_framework import serializers
-from Admin.models import Users
+from Admin.models import Task, Users
 from .models import Profile
 from Admin.serializers import BatchSerializers
 
@@ -42,3 +42,8 @@ class ProfileSerializers(serializers.ModelSerializer):
         model = Users
         fields = '__all__'
         depth = 1
+
+class TaskViewSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = '__all__'
