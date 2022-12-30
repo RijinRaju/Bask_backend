@@ -1,3 +1,4 @@
+from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
 # Create your models here.
@@ -64,7 +65,7 @@ class Users(AbstractBaseUser):
     domain_name = models.ForeignKey(Domain,on_delete = models.CASCADE,null=True)
     Date_of_joining = models.DateField(auto_now=True)
 
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     staff = models.BooleanField(default=False)  # a admin user; non super-user
     is_admin = models.BooleanField(default=False)
 
@@ -101,3 +102,26 @@ class Task(models.Model):
     task = models.JSONField(null=True)
     week = models.CharField(max_length=150,null=True)
     date = models.DateField(auto_now=True)
+
+class Allocate(models.Model):
+    advisor  = models.ForeignKey(Users, on_delete=models.CASCADE,null=True, related_name="advisors")
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True)
+    student = models.ForeignKey(Users, on_delete = models.CASCADE, null= True, related_name= "students")
+
+
+class Manifest(models.Model):
+    week = models.CharField(max_length=100,null=True)
+    user = models.ForeignKey(Users,on_delete=models.CASCADE,null=True)
+    status = models.CharField(max_length=10,null=True)
+    task = models.CharField(max_length=150,null=True)
+    updates= models.CharField(max_length=150,null=True)
+    reviewer_name = models.CharField(max_length=150,null=True)
+    advisor_name = models.CharField(max_length=150,null=True)
+    score_1 = models.IntegerField(default=0)
+    Extra_workout = models.CharField(max_length=150,null=True)
+    score_2 = models.IntegerField(default=0)
+    review_date = models.DateTimeField(auto_now=True)
+    eng_rev = models.CharField(max_length=150,null=True)
+    score_3 = models.IntegerField(default=0)
+    Total = models.IntegerField(default=0)
+    star = models.IntegerField(default=0)

@@ -16,6 +16,8 @@ ALLOWED_HOSTS = ['*']
 
 
 INSTALLED_APPS = [
+    "daphne",
+    "channels",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -30,6 +32,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'agora',
 
 
 
@@ -67,7 +70,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'broto_backend.wsgi.application'
 
-
+ASGI_APPLICATION = "broto_backend.asgi.application"
 
 
 DATABASES = {
@@ -78,11 +81,22 @@ DATABASES = {
         'PASSWORD':'12345',
         'HOST':'127.0.0.1',
         'PORT':'5000',
+        "TEST": {
+            "NAME":'bro_db_chat',
+        },
 
     }
 }
 
 
+CHANNEL_LAYERS = {
+    'default': {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    }
+}
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -158,7 +172,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': False,
+    'UPDATE_LAST_LOGIN': True,
 
     'ALGORITHM': 'HS256',
     # 'SIGNING_KEY': SECRET_KEY,
@@ -187,8 +201,9 @@ SIMPLE_JWT = {
 # setting up the email servers
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT =   '587'
-EMAIL_HOST_USER = 'rijinraj856@gmail.com'
-EMAIL_HOST_PASSWORD = 'vrihcnnikwgdqklc'
+EMAIL_HOST_USER = 'app.advisor.verify@gmail.com'
+EMAIL_HOST_PASSWORD = 'nyynxwepkvvpypmv'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 # EMAIL_USE_SSL = False
+

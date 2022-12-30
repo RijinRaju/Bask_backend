@@ -2,7 +2,7 @@ from dataclasses import fields
 from pyexpat import model
 from wsgiref import validate
 from rest_framework import serializers
-from Admin.models import Task, Users
+from Admin.models import Allocate, Task, Users
 from .models import Profile
 from Admin.serializers import BatchSerializers
 
@@ -19,7 +19,6 @@ class SignupSerializers(serializers.ModelSerializer):
                 first_name = validated_data['first_name'],
                 last_name = validated_data['last_name'],
                 email = validated_data['email'],
-                domain_name = validated_data['domain_name'],
                 password = validated_data['password'],
                 phone = None,
                 img = None,
@@ -47,3 +46,14 @@ class TaskViewSerializers(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = '__all__'
+
+class ProfileUpdateSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = '__all__'
+
+class BatchSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Allocate
+        fields = '__all__'
+        depth = 1

@@ -20,6 +20,13 @@ urlpatterns = [
     path('batch_list',views.batch_list,name="batch_list"),
     path('add_task',views.add_task,name="add_task"),
     path('task_view',views.task_view,name="task_view"),
+    path('pend_list', views.pend_list,name="pend_list"),
+    path('approve_list',views.approve_list,name="approve_list"),
+    path('decline',views.decline,name="declined"),
+    path('advisor_list',views.advisor_list,name="advisor_list"),
+    path('count_students',views.count_students,name="count student"),
+    path('allot_number',views.allot_number,name="allot number"),
+    path('stud_lst',views.students_lists,name="students lists")
     
     
 

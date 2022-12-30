@@ -1,14 +1,11 @@
-from functools import partial
-import imp
-from socket import AddressInfo
-from django.shortcuts import render
+from tkinter.messagebox import NO
 from rest_framework import status
-from .models import  Batch, Domain, Task, Users
+from .models import  Allocate, Batch, Domain, Task, Users
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view,permission_classes,authentication_classes
-
-from .serializers import  BatchSerializers, BatchSerializersRead, DomainSerializers,AdvisorsSerializers,TaskSerializers, TaskViewSerializers
+from .serializers import  AddStudentSerializers, BatchSerializers, BatchSerializersRead, DomainSerializers,AdvisorsSerializers, ListSerializers, StudentsListSerializers,TaskSerializers, TaskViewSerializers
+from . import serializers
 from rest_framework.response import Response
 from django.core.mail import send_mail
 from rest_framework.authentication import TokenAuthentication
@@ -66,7 +63,7 @@ def domain(request):
 def add_domain(request):
     data = request.data
     title = data.get('title',None)   
-    domain  = Domain.objects.filter(title__icontains=title).exists()
+    domain  = Domain.objects.filter(title__iexact=title).exists()
     if domain:
         return Response(status= status.HTTP_403_FORBIDDEN)    
     serializer = DomainSerializers(data = request.data)
@@ -161,3 +158,67 @@ def task_view(request):
     task = Task.objects.all()
     serializers = TaskViewSerializers(task, many=True)
     return Response(serializers.data)
+
+
+
+@api_view(['POST'])
+def pend_list(request):
+    pending_list = Users.objects.filter(role='Student',is_active=False)
+    serializers = ListSerializers(pending_list,many=True)
+    return Response(serializers.data)
+
+@api_view(['POST'])
+def approve_list(request):
+    id = request.data.get('student',None)
+    approve = Users.objects.get(id=id)
+    approve.is_active = True
+    approve.save()
+    studentSerializer = AddStudentSerializers(data = request.data,partial=True)
+    if studentSerializer.is_valid():
+        studentSerializer.save()
+    
+    else :
+        print(studentSerializer.error)
+    pending_list = Users.objects.filter(role='Student', is_active=False)
+    serializers = ListSerializers(pending_list, many=True)
+    
+    return Response(serializers.data)
+
+
+@api_view(['POST'])
+def decline(request):
+    id= request.data.get('id',None)
+    user = Users.objects.filter(id=id).delete()
+    return Response('user deleted')
+
+@api_view(['POST'])
+def advisor_list(request):
+    advisor = Users.objects.filter(role="Advisor",is_admin=False)
+    serializer = serializers.AdvisorsListSerializers(advisor,many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def count_students(request):
+    student = Allocate.objects.filter(advisor =None).count()
+    print(student)
+    return Response({'count':student})
+
+@api_view(['POST'])
+def allot_number(request):
+    count = request.data.get('counter',None)
+    id = request.data.get('id',None)
+    advisor = Users.objects.get(id=id)
+    students = Allocate.objects.filter(advisor=None)[:count]
+    for stu in students:
+        stu.advisor = advisor
+        stu.save()
+    return Response('data saved')
+
+
+@api_view(['POST'])
+def students_lists(request):
+    id = request.data.get('id',None)
+    print(id)
+    stud = Allocate.objects.filter(batch=id)
+    serializer = StudentsListSerializers(stud,many=True)
+    return Response(serializer.data)
