@@ -76,6 +76,21 @@ def add_domain(request):
         return Response(status = status.HTTP_400_BAD_REQUEST)
 
 
+def send_conf_mail(password,email):
+    # sending email to the new advisors to inform password for login
+    message = "Hi ,welcome to our family your account PASSWORD: " + \
+        password+" for EMAIL:  "+ email
+    subject = "welcome mail"
+
+    send_mail(
+        subject,
+        message,
+        'b@gmail.com',
+        email,
+        fail_silently=False,
+
+    )
+
 @api_view(['POST'])
 def add_advisors(request):
     data = request.data
@@ -90,19 +105,8 @@ def add_advisors(request):
         serializer = AdvisorsSerializers(data = request.data)
         if serializer.is_valid():
             serializer.save()
-
-            # sending email to the new advisors to inform password for login
-            message = "Hi ,welcome to our family your account PASSWORD: "+data.get('password')+" for EMAIL:  "+data.get('email')
-            subject  = "welcome mail"
-
-            send_mail(
-                subject,
-                message,
-                'b@gmail.com',
-                email,
-                fail_silently=False,
-
-            )
+            send_conf_mail(data.get('password'),data.get('email'))
+           
             return Response("data saved")
         else:
             return Response(serializer.errors)
@@ -237,3 +241,5 @@ def profile_update(request):
     userProfile = Users.objects.filter(id=user)
     serializers = AdminSerializersProfiles(userProfile,many=True)
     return Response(serializers.data)
+
+
