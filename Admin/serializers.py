@@ -1,7 +1,4 @@
-from contextlib import nullcontext
-from dataclasses import fields
-from pyexpat import model
-from .models import Domain,Batch, Task, Users, Allocate
+from .models import Domain,Batch, Task, Users, Allocate,Week
 from rest_framework import serializers
 
 class DomainSerializers(serializers.ModelSerializer):
@@ -78,3 +75,13 @@ class StudentsListSerializers(serializers.ModelSerializer):
         model = Allocate
         fields = '__all__'
         depth = 1
+
+class WeekSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Week
+        fields = '__all__'
+
+class AdminSerializersProfiles(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields= "__all__"

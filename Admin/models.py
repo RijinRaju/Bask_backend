@@ -109,19 +109,30 @@ class Allocate(models.Model):
     student = models.ForeignKey(Users, on_delete = models.CASCADE, null= True, related_name= "students")
 
 
+
+class Week(models.Model):
+    week = models.CharField(max_length=150,null=True)
+
 class Manifest(models.Model):
-    week = models.CharField(max_length=100,null=True)
+    week = models.ForeignKey(Week,on_delete=models.CASCADE,null=True)
     user = models.ForeignKey(Users,on_delete=models.CASCADE,null=True)
     status = models.CharField(max_length=10,null=True)
-    task = models.CharField(max_length=150,null=True)
+    week_task = models.CharField(max_length=150,null=True)
     updates= models.CharField(max_length=150,null=True)
     reviewer_name = models.CharField(max_length=150,null=True)
     advisor_name = models.CharField(max_length=150,null=True)
     score_1 = models.IntegerField(default=0)
-    Extra_workout = models.CharField(max_length=150,null=True)
+    extra_workouts = models.CharField(max_length=150,null=True)
     score_2 = models.IntegerField(default=0)
     review_date = models.DateTimeField(auto_now=True)
-    eng_rev = models.CharField(max_length=150,null=True)
+    english_review = models.CharField(max_length=150,null=True)
     score_3 = models.IntegerField(default=0)
-    Total = models.IntegerField(default=0)
+    total = models.IntegerField(default=0)
     star = models.IntegerField(default=0)
+
+
+class Answers(models.Model):
+    question = models.ForeignKey(Task,on_delete=models.CASCADE,null=True)
+    answers = models.JSONField(null=True)
+    user = models.ForeignKey(Users,on_delete=models.CASCADE,null=True)
+

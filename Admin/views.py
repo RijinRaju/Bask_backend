@@ -1,10 +1,10 @@
 from tkinter.messagebox import NO
 from rest_framework import status
-from .models import  Allocate, Batch, Domain, Task, Users
+from .models import  Allocate, Batch, Domain, Task, Users, Week
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view,permission_classes,authentication_classes
-from .serializers import  AddStudentSerializers, BatchSerializers, BatchSerializersRead, DomainSerializers,AdvisorsSerializers, ListSerializers, StudentsListSerializers,TaskSerializers, TaskViewSerializers
+from .serializers import  AddStudentSerializers, AdminSerializersProfiles, BatchSerializers, BatchSerializersRead, DomainSerializers,AdvisorsSerializers, ListSerializers, StudentsListSerializers,TaskSerializers, TaskViewSerializers, WeekSerializers
 from . import serializers
 from rest_framework.response import Response
 from django.core.mail import send_mail
@@ -218,7 +218,22 @@ def allot_number(request):
 @api_view(['POST'])
 def students_lists(request):
     id = request.data.get('id',None)
-    print(id)
     stud = Allocate.objects.filter(batch=id)
     serializer = StudentsListSerializers(stud,many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def weeks(request):
+    week = Week.objects.all()
+    serializers = WeekSerializers(week,many=True)
+    return Response(serializers.data)
+
+@api_view(['POST'])
+def profile_update(request):
+    user = request.data.get('user',None)
+    profile = Users.objects.get(id=user)
+    profile.img = request.data.get('img',None)
+    profile.save()
+    userProfile = Users.objects.filter(id=user)
+    serializers = AdminSerializersProfiles(userProfile,many=True)
+    return Response(serializers.data)

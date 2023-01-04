@@ -7,9 +7,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from rest_framework import status
-from Admin.models import Allocate, Task, Users,Domain
+from Admin.models import Allocate, Task, Users,Domain,Answers
 from Admin.serializers import  DomainSerializers, TaskSerializers
-from .serializers import ProfileSerializers, ProfileUpdateSerializers, SignupSerializers, TaskViewSerializers,BatchSerializers
+from .serializers import AnswerSerializers, ProfileSerializers, ProfileUpdateSerializers, SignupSerializers, TaskViewSerializers,BatchSerializers
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -125,6 +125,20 @@ def del_task(request):
     tsk = Task.objects.get(id=id).delete()
     serializers = TaskSerializers(tsk)
     return Response(serializers.data)
+
+@api_view(['POST'])
+def submit_answers(request):
+    print(request.data)
+    serializers = AnswerSerializers(data=request.data)
+    question = request.data.get('question',None)
+    if Answers.objects.filter(question = question).exists():
+        return Response(status=status.HTTP_208_ALREADY_REPORTED)
+    if serializers.is_valid():
+        serializers.save()
+        return Response(serializers.data)
+    else:
+        return Response("something wrong")
+
 
 def chat(request):
     return render(request, "students/chat.html")

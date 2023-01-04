@@ -16,15 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken import views
-from agora.views import Agora
+
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('admin/',include('Admin.urls')),
     path('advisor/',include('Advisors.urls')),
     path('',include('Students.urls')),
-    path('agora/', Agora.as_view(
-        app_id='098f0ed2cd4b43dbab4f28e874bf7028',
-        channel='563728'
-    )),
+   
 ]

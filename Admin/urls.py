@@ -26,7 +26,9 @@ urlpatterns = [
     path('advisor_list',views.advisor_list,name="advisor_list"),
     path('count_students',views.count_students,name="count student"),
     path('allot_number',views.allot_number,name="allot number"),
-    path('stud_lst',views.students_lists,name="students lists")
+    path('stud_lst',views.students_lists,name="students lists"),
+    path('weeks',views.weeks,name="weeks"),
+    path('prf_update',views.profile_update,name="profile updates")
     
     
 

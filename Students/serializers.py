@@ -1,8 +1,5 @@
-from dataclasses import fields
-from pyexpat import model
-from wsgiref import validate
 from rest_framework import serializers
-from Admin.models import Allocate, Task, Users
+from Admin.models import Allocate, Answers, Task, Users
 from .models import Profile
 from Admin.serializers import BatchSerializers
 
@@ -57,3 +54,8 @@ class BatchSerializers(serializers.ModelSerializer):
         model = Allocate
         fields = '__all__'
         depth = 1
+
+class AnswerSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Answers
+        fields = "__all__"
