@@ -28,7 +28,8 @@ urlpatterns = [
     path('allot_number',views.allot_number,name="allot number"),
     path('stud_lst',views.students_lists,name="students lists"),
     path('weeks',views.weeks,name="weeks"),
-    path('prf_update',views.profile_update,name="profile updates")
+    path('prf_update',views.profile_update,name="profile updates"),
+    path('prf_load',views.profile_view,name="profile view"),
     
     
 

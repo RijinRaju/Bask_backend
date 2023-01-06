@@ -6,6 +6,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view,permission_classes,authentication_classes
 from .serializers import  AddStudentSerializers, AdminSerializersProfiles, BatchSerializers, BatchSerializersRead, DomainSerializers,AdvisorsSerializers, ListSerializers, StudentsListSerializers,TaskSerializers, TaskViewSerializers, WeekSerializers
 from . import serializers
+from . import tasks
 from rest_framework.response import Response
 from django.core.mail import send_mail
 from rest_framework.authentication import TokenAuthentication
@@ -77,9 +78,10 @@ def add_domain(request):
 
 
 def send_conf_mail(password,email):
+    print(password,email)
     # sending email to the new advisors to inform password for login
-    message = "Hi ,welcome to our family your account PASSWORD: " + \
-        password+" for EMAIL:  "+ email
+    message = "Hi ,you have created and account. your account PASSWORD: " + \
+        password
     subject = "welcome mail"
 
     send_mail(
@@ -105,8 +107,9 @@ def add_advisors(request):
         serializer = AdvisorsSerializers(data = request.data)
         if serializer.is_valid():
             serializer.save()
-            send_conf_mail(data.get('password'),data.get('email'))
-           
+            # celery 
+            tasks.email_conferm.delay(data.get('password'),email)
+            
             return Response("data saved")
         else:
             return Response(serializer.errors)
@@ -243,3 +246,9 @@ def profile_update(request):
     return Response(serializers.data)
 
 
+@api_view(['POST'])
+def profile_view(request):
+    admin = request.data.get('user',None)
+    profile = Users.objects.filter(id=admin)
+    serializers = AdminSerializersProfiles(profile,many=True)
+    return Response(serializers.data)
