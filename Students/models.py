@@ -17,3 +17,35 @@ class Notifications(models.Model):
     user_revoker = models.ForeignKey(Users,null=True,blank=True,related_name='user_revoker', on_delete=models.CASCADE)
     status = models.CharField(max_length=264,null=True,blank=True,default='unread')
     type_of_notification = models.CharField(max_length=264,null=True,blank=True)
+
+
+
+class Room(models.Model):
+    room_name =  models.CharField(max_length=150,null=True)
+    sender = models.ForeignKey(
+        Users, on_delete=models.CASCADE, null=True, related_name="sender")
+    receiver = models.ForeignKey(
+        Users, on_delete=models.CASCADE, null=True, related_name="receiver")
+
+
+class Messages(models.Model):
+    room_name = models.ForeignKey(Room,on_delete=models.CASCADE,null=True)
+    sender = models.ForeignKey(Users,on_delete=models.CASCADE,null=True)
+    message = models.TextField(null=True)
+    time = models.DateTimeField(auto_now_add = True) 
+
+
+class PersonalDetails(models.Model):
+    user = models.ForeignKey(Users,on_delete=models.CASCADE,null=True)
+    dob = models.CharField(max_length=150,null=True)
+    age = models.IntegerField(default=0,null=True)
+    gender = models.CharField(max_length=150,null=True)
+    father_name = models.CharField(max_length=200,null=True)
+    father_contact = models.CharField(max_length=200,null=True)
+    mother_name = models.CharField(max_length=200,null=True)
+    mother_contact = models.CharField(max_length=200,null=True)
+    address = models.TextField(null=True)
+    village = models.CharField(max_length=200,null=True)
+    taluk = models.CharField(max_length=200,null=True)
+    education_qualification = models.CharField(max_length=200,null=True)
+    collage_or_school = models.CharField(max_length=200,null=True)

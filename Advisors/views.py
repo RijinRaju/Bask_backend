@@ -1,10 +1,11 @@
-from functools import partial
+from django.dispatch import receiver
 from Admin.models import Allocate,Manifest
+from Students.models import Messages,Room
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from Admin.serializers import StudentsListSerializers
 from Advisors import serializers
-from Advisors.serializers import ManifestUpdateSerializers, ManifestViewSerializers
+from Advisors.serializers import ChatListSerializers, ManifestUpdateSerializers, ManifestViewSerializers, RecordChatSerializers
 # Create your views here.
 
 
@@ -56,3 +57,20 @@ def update_manifest(request):
     else:
         return Response(serializer.errors)
     
+
+@api_view(['POST'])
+def chat_list(request):
+    id = request.data.get('id',None)
+    list = Allocate.objects.filter(advisor=id)
+    serializers = ChatListSerializers(list,many=True)
+    return Response(serializers.data) 
+
+
+@api_view(["POST"])
+def chat_record(request):
+    sender = request.data.get('sender',None)
+    room_name = request.data.get('room_name',None)
+    room = Room.objects.get(room_name=room_name,sender=sender,receiver=room_name)
+    chats = Messages.objects.filter(room_name=room)
+    serializers =  RecordChatSerializers(chats,many=True)
+    return Response(serializers.data)

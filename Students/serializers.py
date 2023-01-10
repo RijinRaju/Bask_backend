@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from Admin.models import Allocate, Answers, Task, Users
-from .models import Profile
+from .models import PersonalDetails, Profile
 from Admin.serializers import BatchSerializers
 
 class SignupSerializers(serializers.ModelSerializer):
@@ -58,4 +58,9 @@ class BatchSerializers(serializers.ModelSerializer):
 class AnswerSerializers(serializers.ModelSerializer):
     class Meta:
         model = Answers
+        fields = "__all__"
+
+class DetailsSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = PersonalDetails
         fields = "__all__"

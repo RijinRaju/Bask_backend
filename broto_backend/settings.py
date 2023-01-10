@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    'agora',
 
 
 
@@ -91,10 +90,12 @@ DATABASES = {
 
 CHANNEL_LAYERS = {
     'default': {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
-        },
+        # in production use redis db
+        # "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "BACKEND":  "channels.layers.InMemoryChannelLayer"
+        # "CONFIG": {
+        #     "hosts": [("127.0.0.1", 6379)],
+        # },
     }
 }
 # Password validation

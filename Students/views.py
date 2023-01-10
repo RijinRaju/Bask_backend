@@ -1,4 +1,5 @@
 from copyreg import constructor
+from email.headerregistry import Address
 from functools import partial
 from importlib.metadata import requires
 from telnetlib import DO
@@ -9,7 +10,8 @@ from rest_framework.authtoken.models import Token
 from rest_framework import status
 from Admin.models import Allocate, Task, Users,Domain,Answers
 from Admin.serializers import  DomainSerializers, TaskSerializers
-from .serializers import AnswerSerializers, ProfileSerializers, ProfileUpdateSerializers, SignupSerializers, TaskViewSerializers,BatchSerializers
+from Students.models import PersonalDetails
+from .serializers import AnswerSerializers, DetailsSerializers, ProfileSerializers, ProfileUpdateSerializers, SignupSerializers, TaskViewSerializers,BatchSerializers
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -139,6 +141,43 @@ def submit_answers(request):
     else:
         return Response("something wrong")
 
+
+@api_view(['POST'])
+def advisor_list(request):
+    id = request.data.get("id",None)
+    advisors  =  Allocate.objects.get(student=id)
+    user = Users.objects.filter(id=advisors.advisor.id)
+    serializers = ProfileSerializers(user,many=True)
+    return Response(serializers.data)
+
+@api_view(['POST'])
+def add_address(request):
+    user = request.data.get('user',None)
+    if PersonalDetails.objects.filter(user=user).exists():
+        details = PersonalDetails.objects.get(user=user)
+        serializers = DetailsSerializers(details,data=request.data,partial=True)
+        
+        if serializers.is_valid():
+            serializers.save()
+            print(serializers.data)
+            details_updated = PersonalDetails.objects.filter(user=user)
+            serializers2 = DetailsSerializers(details_updated,many=True)
+            return Response(serializers2.data)
+        else:
+            print("serial error",serializers.errors)
+            return Response(serializers.errors)
+    add_detailsSerializers = DetailsSerializers(data = request.data,partial=True)
+    if add_detailsSerializers.is_valid():
+        add_detailsSerializers.save()
+        return Response(add_detailsSerializers.data)
+    return Response("something missing")
+
+@api_view(['POST'])
+def fetch_address(request):
+    user = request.data.get('user',None)
+    details = PersonalDetails.objects.filter(user=user)
+    serializers = DetailsSerializers(details,many=True)
+    return Response(serializers.data)
 
 def chat(request):
     return render(request, "students/chat.html")

@@ -1,36 +1,93 @@
 # chat/consumers.py
 import json
+from django.dispatch import receiver
+from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
-
+from .models import Messages
+from Admin.models import Users
+from .models import Room
+from django.core import serializers
 
 class ChatConsumer(AsyncWebsocketConsumer):
+
+
+
+
+    @database_sync_to_async
+    def save_room(self,room_name,sender,enduser):
+        sender_instance = Users.objects.get(id=sender)
+        receiver_instance = Users.objects.get(id=enduser)
+        if Room.objects.filter(room_name=room_name).exists():
+            self.room_id = Room.objects.get(room_name=room_name, sender=sender_instance)
+            return self.room_id
+        self.room_id  = Room.objects.create(room_name=room_name,sender=sender_instance,receiver=receiver_instance) 
+        return self.room_id
+
+    @database_sync_to_async
+    def save_chat(self,msg,sender):
+        sender_instance = Users.objects.get(id=sender)
+        print(sender_instance)
+        self.chat = Messages.objects.create(room_name=self.room_id,message=msg,sender=sender_instance)
+        return self .chat
+
+
     async def connect(self):
-        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]  #room name is the receiver
+        self.sender = self.scope["url_route"]["kwargs"]["sender"]
+        self.enduser = self.scope["url_route"]["kwargs"]["enduser"]
         self.room_group_name = "notification_%s" % self.room_name
-
         # Join room group
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-
+        await self.channel_layer.group_add(
+             self.room_group_name,
+             self.channel_name,
+             )
         await self.accept()
 
     async def disconnect(self, close_code):
         # Leave room group
-        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+        await self.channel_layer.group_discard(
+            self.room_group_name, 
+            self.channel_name
+            )
 
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
-
+        print(self.enduser)
+        create_room  = await self.save_room(self.room_name,self.sender,self.enduser)
         # Send message to room group
         await self.channel_layer.group_send(
-            self.room_group_name, {"type": "chat_message", "message": message}
+            self.room_group_name, {"type": "send_message",
+             "message": message,
+             
+             }
         )
         print(message)
 
     # Receive message from room group
-    async def chat_message(self, event):
+    async def send_message(self, event):
         message = event["message"]
-
+        new_messages = await self.save_chat(message,self.sender)
+        # serialized_msg = serializers.serialize('json',new_messages
+        print(new_messages)
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({"message": message}))
+        await self.send(text_data=json.dumps({
+            "message":message,
+            }))
+
+
+class NotificationConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
+    
+    async def disconnect(self, close_code):
+        pass
+
+    
+    async def receive(self,text_data):
+        self.send(text_data = "you said"+ text_data)
+
+    
+    async def send_notification(self, event):
+        await self.send(text_data = event['new task added'])
