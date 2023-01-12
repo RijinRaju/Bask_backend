@@ -1,4 +1,4 @@
-from Admin.models import Users
+from Admin.models import Batch, Users
 from django.db import models
 
 # Create your models here.
@@ -29,3 +29,11 @@ class Week(models.Model):
     week23 = models.CharField(max_length=150,null=True)
     week24 = models.CharField(max_length=150,null=True)
     user = models.ForeignKey(Users,on_delete=models.CASCADE,null=True)
+
+
+class Reports(models.Model):
+    students = models.IntegerField(default=0)
+    eliminated = models.IntegerField(default=0)
+    date = models.DateField(auto_now=True)
+    note = models.TextField(null=True)
+    batch = models.ForeignKey(Batch,on_delete=models.CASCADE,null=True)

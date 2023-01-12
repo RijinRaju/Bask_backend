@@ -1,11 +1,12 @@
 from django.dispatch import receiver
-from Admin.models import Allocate,Manifest
+from Admin.models import Allocate, Batch,Manifest
+from Advisors.models import Reports
 from Students.models import Messages,Room
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from Admin.serializers import StudentsListSerializers
 from Advisors import serializers
-from Advisors.serializers import ChatListSerializers, ManifestUpdateSerializers, ManifestViewSerializers, RecordChatSerializers
+from Advisors.serializers import BatchListSerializers, ChatListSerializers, ManifestUpdateSerializers, ManifestViewSerializers, RecordChatSerializers, ReportSerializers
 # Create your views here.
 
 
@@ -70,7 +71,30 @@ def chat_list(request):
 def chat_record(request):
     sender = request.data.get('sender',None)
     room_name = request.data.get('room_name',None)
-    room = Room.objects.get(room_name=room_name,sender=sender,receiver=room_name)
+    print("sender and room_name",sender,room_name)
+    room = Room.objects.get(room_name=room_name)
     chats = Messages.objects.filter(room_name=room)
     serializers =  RecordChatSerializers(chats,many=True)
+    return Response(serializers.data)
+
+@api_view(["POST"])
+def advisor_batch_list(request):
+    user = request.data.get('user',None)  
+    batchs = Batch.objects.filter(batch_advisor = user)
+    serializers = BatchListSerializers(batchs,many=True)
+    return Response(serializers.data)
+
+@api_view(["POST"])
+def batch_report(request):
+    serializer = ReportSerializers(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        reports = Reports.objects.all()
+        serializer2 = ReportSerializers(reports,many=True)
+    return Response(serializer2.data)
+
+@api_view(["POST"])
+def list_reports(request):
+    reports = Reports.objects.all()
+    serializers = ReportSerializers(reports,many=True)
     return Response(serializers.data)
