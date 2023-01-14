@@ -1,12 +1,12 @@
 from django.dispatch import receiver
-from Admin.models import Allocate, Batch,Manifest
+from Admin.models import Allocate, Answers, Batch,Manifest
 from Advisors.models import Reports
 from Students.models import Messages,Room
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from Admin.serializers import StudentsListSerializers
 from Advisors import serializers
-from Advisors.serializers import BatchListSerializers, ChatListSerializers, ManifestUpdateSerializers, ManifestViewSerializers, RecordChatSerializers, ReportSerializers
+from Advisors.serializers import BatchListSerializers, ChatListSerializers, ManifestUpdateSerializers, ManifestViewSerializers, RecordChatSerializers, ReportSerializers, VerifyTaskSerializers
 # Create your views here.
 
 
@@ -98,3 +98,11 @@ def list_reports(request):
     reports = Reports.objects.all()
     serializers = ReportSerializers(reports,many=True)
     return Response(serializers.data)
+
+
+@api_view(['POST'])
+def check_task(request):
+    student = request.data.get('user',None)
+    task = Answers.objects.filter(user=student)
+    serializer = VerifyTaskSerializers(task,many=True)
+    return Response(serializer.data)

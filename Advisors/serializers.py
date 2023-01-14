@@ -2,7 +2,7 @@ from pyexpat import model
 from Advisors.models import Reports
 from Students.models import Messages 
 from rest_framework import serializers
-from Admin.models import Allocate, Manifest,Batch
+from Admin.models import Allocate, Answers, Manifest,Batch
 
 
 
@@ -39,3 +39,9 @@ class ReportSerializers(serializers.ModelSerializer):
     class Meta:
         model = Reports
         fields = "__all__"
+
+class VerifyTaskSerializers(serializers.ModelSerializer):
+    class Meta:
+        model=Answers
+        fields= '__all__'
+        depth = 1

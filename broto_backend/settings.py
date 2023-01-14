@@ -208,3 +208,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 # EMAIL_USE_SSL = False
 
+# setting up s3 bucket for static files
+# AWS_ACCESS_KEY_ID = 'AKIAVL2RJ5PBJKSKSQ5D'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'broto'
