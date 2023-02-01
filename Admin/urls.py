@@ -30,6 +30,7 @@ urlpatterns = [
     path('weeks',views.weeks,name="weeks"),
     path('prf_update',views.profile_update,name="profile updates"),
     path('prf_load',views.profile_view,name="profile view"),
+    path('dom_del/<int:id>',views.delete_domain,name="delete domain")
     
     
 

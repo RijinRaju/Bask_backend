@@ -13,6 +13,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
+from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -27,6 +28,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         token['first_name'] = user.first_name
         token['email'] = user.email
+        token['role'] = user.role
+        token['is_admin'] = user.is_admin
 
         return token
 
@@ -63,13 +66,15 @@ def domain(request):
 @api_view(['POST','GET'])
 def add_domain(request):
     data = request.data
+    print("domain",data)
     title = data.get('title',None)   
     domain  = Domain.objects.filter(title__iexact=title).exists()
     if domain:
         return Response(status= status.HTTP_403_FORBIDDEN)    
     serializer = DomainSerializers(data = request.data)
     if serializer.is_valid():
-        serializer.save()
+        serializer.save()   
+        print("hello")
         domains = Domain.objects.all()
         domainList= DomainSerializers(domains,many=True)
         return Response(domainList.data)
@@ -78,7 +83,7 @@ def add_domain(request):
 
 
 def send_conf_mail(password,email):
-    print(password,email)
+    print("celery username and password:", password,"email:",email)
     # sending email to the new advisors to inform password for login
     message = "Hi ,you have created and account. your account PASSWORD: " + \
         password
@@ -96,20 +101,23 @@ def send_conf_mail(password,email):
 @api_view(['POST'])
 def add_advisors(request):
     data = request.data
-    print(data)
     email = request.POST.getlist('email')
     # email = data.get('email')
-    print(data.get('email'))
-
     if Users.objects.filter(email=data.get('email')).exists():
         return Response("Email already taken")
     else:
         serializer = AdvisorsSerializers(data = request.data)
         if serializer.is_valid():
             serializer.save()
+            print(serializer.data)
+        if Users.objects.filter(email=data.get('email')).exists():
+            print("hello user")
+            advisor = Users.objects.get(email=data.get('email'))
+            if advisor.is_active == False:
+                advisor.is_active = True
+                advisor.save()
             # celery 
-            tasks.email_conferm.delay(data.get('password'),email)
-            
+            tasks.email_conferm.delay(data.get('password'),email) 
             return Response("data saved")
         else:
             return Response(serializer.errors)
@@ -251,3 +259,13 @@ def profile_view(request):
     profile = Users.objects.filter(id=admin)
     serializers = AdminSerializersProfiles(profile,many=True)
     return Response(serializers.data)
+
+@api_view(['DELETE'])
+def delete_domain(request,id):
+    if id:
+        print(id)
+        domain = Domain.objects.get(id=id)
+        domain.delete()
+        return Response(status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)

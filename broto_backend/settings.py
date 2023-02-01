@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'storages',
 
 
 
@@ -146,7 +147,7 @@ AUTH_USER_MODEL = 'Admin.Users'
 REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
       
 
     )
@@ -209,6 +210,10 @@ EMAIL_USE_TLS = True
 # EMAIL_USE_SSL = False
 
 # setting up s3 bucket for static files
-# AWS_ACCESS_KEY_ID = 'AKIAVL2RJ5PBJKSKSQ5D'
-# AWS_SECRET_ACCESS_KEY = '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'
-# AWS_STORAGE_BUCKET_NAME = 'broto'
+AWS_ACCESS_KEY_ID = 'AKIAVL2RJ5PBJKSKSQ5D'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'broto'
+
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

@@ -179,9 +179,4 @@ def fetch_address(request):
     serializers = DetailsSerializers(details,many=True)
     return Response(serializers.data)
 
-def chat(request):
-    return render(request, "students/chat.html")
 
-
-def room(request, room_name):
-    return render(request, "students/room.html", {"room_name": room_name})

@@ -62,7 +62,7 @@ class Users(AbstractBaseUser):
     status = models.BooleanField(default=True)
     DOB = models.DateField(null=True)
     password = models.CharField(max_length=150,null=True)
-    domain_name = models.ForeignKey(Domain,on_delete = models.CASCADE,null=True)
+    domain_name = models.ForeignKey(Domain,on_delete = models.SET_NULL,null=True)
     Date_of_joining = models.DateField(auto_now=True)
 
     is_active = models.BooleanField(default=False)
@@ -90,23 +90,24 @@ class Users(AbstractBaseUser):
 class Batch(models.Model):
     Batch_name = models.CharField(max_length=150,null=True)
     location = models.CharField(max_length=150,null=True)
-    batch_advisor = models.ForeignKey(Users, on_delete=models.CASCADE)
+    batch_advisor = models.ForeignKey(Users, on_delete=models.SET_NULL,null=True)
     start_date = models.DateField(auto_now=True)
     batch_status = models.BooleanField(default=True)
 
 
 class Task(models.Model):
-    advisor = models.ForeignKey(Users, on_delete=models.CASCADE,null=True)
-    Batch = models.ForeignKey(Batch,on_delete= models.CASCADE,null=True)
-    domain = models.ForeignKey(Domain,on_delete=models.CASCADE,null=True)
+    advisor = models.ForeignKey(Users, on_delete=models.SET_NULL,null=True)
+    Batch = models.ForeignKey(Batch,on_delete= models.SET_NULL,null=True)
+    domain = models.ForeignKey(Domain, on_delete=models.SET_NULL, null=True)
     task = models.JSONField(null=True)
     week = models.CharField(max_length=150,null=True)
     date = models.DateField(auto_now=True)
 
 class Allocate(models.Model):
-    advisor  = models.ForeignKey(Users, on_delete=models.CASCADE,null=True, related_name="advisors")
-    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True)
-    student = models.ForeignKey(Users, on_delete = models.CASCADE, null= True, related_name= "students")
+    advisor  = models.ForeignKey(Users, on_delete=models.SET_NULL,null=True, related_name="advisors")
+    batch = models.ForeignKey(Batch, on_delete=models.SET_NULL, null=True)
+    student = models.ForeignKey(
+        Users, on_delete=models.SET_NULL, null=True, related_name="students")
 
 
 
@@ -114,8 +115,8 @@ class Week(models.Model):
     week = models.CharField(max_length=150,null=True)
 
 class Manifest(models.Model):
-    week = models.ForeignKey(Week,on_delete=models.CASCADE,null=True)
-    user = models.ForeignKey(Users,on_delete=models.CASCADE,null=True)
+    week = models.ForeignKey(Week, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(Users, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=10,null=True)
     week_task = models.CharField(max_length=150,null=True)
     updates= models.CharField(max_length=150,null=True)
@@ -132,7 +133,7 @@ class Manifest(models.Model):
 
 
 class Answers(models.Model):
-    question = models.ForeignKey(Task,on_delete=models.CASCADE,null=True)
+    question = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True)
     answers = models.JSONField(null=True)
-    user = models.ForeignKey(Users,on_delete=models.CASCADE,null=True)
+    user = models.ForeignKey(Users, on_delete=models.SET_NULL, null=True)
 

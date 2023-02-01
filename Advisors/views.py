@@ -37,14 +37,13 @@ def manifest(request):
 def update_manifest(request):
     week = request.data.get('week',None)
     user = request.data.get('user',None)
-    print(week ,user)
+    print("week",week ,user)
     if Manifest.objects.filter(week=week,user=user).exists():
         mnfst = Manifest.objects.get(week=week,user=user)
         updateSerializers = ManifestUpdateSerializers(mnfst,data=request.data,partial=True)
         if updateSerializers.is_valid():
             updateSerializers.save() 
             mnfst = Manifest.objects.filter(week=week, user=user)
-            print(mnfst)
             viewSerializer = ManifestUpdateSerializers(mnfst,many=True)
             return Response(viewSerializer.data)
         else:
