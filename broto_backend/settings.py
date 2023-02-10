@@ -1,14 +1,13 @@
 
+import imp
 from pathlib import Path
 from datetime import timedelta
-
+from decouple import config
 #
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-
-
-SECRET_KEY = 'django-insecure-1t^xl$b5c5zfy=^9@5itmcv8!%!$hsj9=13$zernhcbir9qkzw'
+SECRET_KEY = config('DJ_SECRET_KEY ')
 
 DEBUG = True
 
@@ -210,8 +209,8 @@ EMAIL_USE_TLS = True
 # EMAIL_USE_SSL = False
 
 # setting up s3 bucket for static files
-AWS_ACCESS_KEY_ID = 'AKIAVL2RJ5PBJKSKSQ5D'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'broto'
 
 AWS_S3_FILE_OVERWRITE = False
