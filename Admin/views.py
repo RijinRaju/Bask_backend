@@ -38,19 +38,19 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 
-@api_view(['POST'])
-def admin_login(request):
-    data = request.data
-    email = data.get('email',None)
-    password = data.get('password',None)
-    admin = authenticate(email=email,password=password)
-    if admin:
-        admin_token = Users.objects.get(email=email)
-        token_obj, _ = Token.objects.get_or_create(user=admin_token)
-        print(token_obj)
-        return Response({"token" : str(token_obj)})
-    else:
-        return Response("errors")
+    # @api_view(['POST'])
+    # def admin_login(request):
+    #     data = request.data
+    #     email = data.get('email',None)
+    #     password = data.get('password',None)
+    #     admin = authenticate(email=email,password=password)
+    #     if admin:
+    #         admin_token = Users.objects.get(email=email)
+    #         token_obj, _ = Token.objects.get_or_create(user=admin_token)
+    #         print(token_obj)
+    #         return Response({"token" : str(token_obj)})
+    #     else:
+    #         return Response("errors")
 
 
 @api_view(['GET'])
@@ -59,6 +59,7 @@ def admin_login(request):
 def domain(request):
     domains = Domain.objects.all()
     print(request.auth)
+    print("domain",domains)
     serializers = DomainSerializers(domains, many=True)
     return Response(serializers.data)
 
