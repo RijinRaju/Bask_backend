@@ -1,4 +1,3 @@
-from tkinter.messagebox import NO
 from rest_framework import status
 from .models import  Allocate, Batch, Domain, Task, Users, Week
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
