@@ -79,7 +79,7 @@ DATABASES = {
         'USER':'postgres',
         'PASSWORD':'12345',
         'HOST':'127.0.0.1',
-        'PORT':'5000',
+        'PORT':'',
         "TEST": {
             "NAME":'bro_db_chat',
         },
