@@ -76,8 +76,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'bro_db',
-        'USER':'postgres',
-        'PASSWORD':'',
+        'USER':'postgres2',
+        'PASSWORD':'12345',
         'HOST':'127.0.0.1',
         'PORT':'',
         "TEST": {
