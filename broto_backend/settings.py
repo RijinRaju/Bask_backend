@@ -76,10 +76,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'bro_db',
-        'USER':'postgres2',
+        'USER':'postgres',#postgres2
         'PASSWORD':'12345',
         'HOST':'127.0.0.1',
-        'PORT':'',
+        'PORT':'5000',#''
         "TEST": {
             "NAME":'bro_db_chat',
         },
@@ -218,3 +218,6 @@ AWS_STORAGE_BUCKET_NAME = 'broto'
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+
+CSRF_TRUSTED_ORIGINS = ["https://www.baskpro.online"]
