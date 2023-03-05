@@ -66,7 +66,7 @@ class Users(AbstractBaseUser):
     Date_of_joining = models.DateField(auto_now=True)
 
     is_active = models.BooleanField(default=False)
-    staff = models.BooleanField(default=False)  # a admin user; non super-user
+    is_staff = models.BooleanField(default=False)  # a admin user; non super-user
     is_admin = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
