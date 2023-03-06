@@ -220,4 +220,4 @@ AWS_DEFAULT_ACL = None
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
-CSRF_TRUSTED_ORIGINS = ["https://baskpro.online"]
+CSRF_TRUSTED_ORIGINS = ["https://baskpro.online","https://www.baskpro.online"]
