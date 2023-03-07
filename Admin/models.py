@@ -136,4 +136,5 @@ class Answers(models.Model):
     question = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True)
     answers = models.JSONField(null=True)
     user = models.ForeignKey(Users, on_delete=models.SET_NULL, null=True)
+    status = models.BooleanField(default=False)
 

@@ -1,9 +1,11 @@
+from telnetlib import STATUS
 from django.dispatch import receiver
 from Admin.models import Allocate, Answers, Batch,Manifest
 from Advisors.models import Reports
 from Students.models import Messages,Room
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import status
 from Admin.serializers import StudentsListSerializers
 from Advisors import serializers
 from Advisors.serializers import BatchListSerializers, ChatListSerializers, ManifestUpdateSerializers, ManifestViewSerializers, RecordChatSerializers, ReportSerializers, VerifyTaskSerializers
@@ -104,3 +106,16 @@ def check_task(request):
     task = Answers.objects.filter(user=student)
     serializer = VerifyTaskSerializers(task,many=True)
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+def verify_task(request):
+    id = request.data.get('task_id',None)
+    try:
+        answer = Answers.objects.get(id=id)
+        answer.status = True
+        answer.save()
+        return Response(status=status.HTTP_200_OK)
+
+    except:
+        return Response(status=status.HTTP_204_NO_CONTENT)

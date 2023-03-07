@@ -12,6 +12,7 @@ urlpatterns = [
     path('adv_batchlst',views.advisor_batch_list,name="batch list"),
     path('add_report',views.batch_report,name="add report"),
     path('list_reports',views.list_reports,name="list reports"),
-    path('chk_task',views.check_task,name="check task")
+    path('chk_task',views.check_task,name="check task"),
+    path('task_verify',views.verify_task,name="task verify")
 
 ]

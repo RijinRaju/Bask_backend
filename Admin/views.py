@@ -117,7 +117,8 @@ def add_advisors(request):
                 advisor.is_active = True
                 advisor.save()
             # celery 
-            tasks.email_conferm.delay(data.get('password'),email) 
+            # tasks.email_conferm.delay(data.get('password'),email) 
+            send_conf_mail(data.get('password'),email)
             return Response("data saved")
         else:
             return Response(serializer.errors)

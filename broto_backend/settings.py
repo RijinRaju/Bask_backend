@@ -6,7 +6,7 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = 'django-insecure-1t^xl$b5c5zfy=^9@5itmcv8!%!$hsj9=13$zernhcbir9qkzw' 
+SECRET_KEY = 'django-insecure-1t^xl$b5c5zfy=^9@5itmcv8!%!$hsj9=13$zernhcbir9qkzw'
 # config('DJ_SECRET_KEY ')
 
 DEBUG = True
@@ -77,11 +77,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'bro_db',
         'USER': 'postgres2',  # postgres2
-        'PASSWORD':'12345',
-        'HOST':'127.0.0.1',
-        'PORT':'',#''
+        'PASSWORD': '12345',
+        'HOST': '127.0.0.1',
+        'PORT': '',  # ''
         "TEST": {
-            "NAME":'bro_db_chat',
+            "NAME": 'bro_db_chat',
         },
 
     }
@@ -131,7 +131,6 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'Admin.Users'
@@ -147,7 +146,7 @@ REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-      
+
 
     )
 }
@@ -156,8 +155,7 @@ REST_FRAMEWORK = {
 CORS_ALLOW_ALL_ORIGINS = True
 
 
-
-#setting up jwt token
+# setting up jwt token
 
 REST_FRAMEWORK = {
 
@@ -201,7 +199,7 @@ SIMPLE_JWT = {
 }
 # setting up the email servers
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT =   '587'
+EMAIL_PORT = '587'
 EMAIL_HOST_USER = 'app.advisor.verify@gmail.com'
 EMAIL_HOST_PASSWORD = 'yiipvwpqiqsfgads'  # 'nyynxwepkvvpypmv'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -220,4 +218,4 @@ AWS_DEFAULT_ACL = None
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
-CSRF_TRUSTED_ORIGINS = ["https://baskpro.online","https://www.baskpro.online"]
+CSRF_TRUSTED_ORIGINS = ["https://baskpro.online", "https://www.baskpro.online"]
