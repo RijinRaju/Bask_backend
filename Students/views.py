@@ -47,19 +47,22 @@ def signUp(request):
         student = Users.objects.get(email=email)
         student.role = "Student"
         student.save() 
-        # sending email to the new advisors to inform password for login
-        message = "we got the request to signin .Your account will be activated after varifiaction. THANK YOU "
-        subject = "confirmation mail"
+        try:
+            # sending email to the new advisors to inform password for login
+            message = "we got the request to signin .Your account will be activated after varifiaction. THANK YOU "
+            subject = "confirmation mail"
 
-        send_mail(
-            subject,
-            message,
-            'b@gmail.com',
-            [toEmail],
-            fail_silently=False,
+            send_mail(
+                subject,
+                message,
+                'b@gmail.com',
+                [toEmail],
+                fail_silently=False,
 
-        )
-        return Response("user created")
+            )
+            return Response("user created")
+        except:
+            return Response("user created")
     else:
         print("errors in python",serializer.errors)
         return Response(serializer.errors)
