@@ -55,12 +55,12 @@ def signUp(request):
             send_mail(
                 subject,
                 message,
-                'b@gmail.com',
+                'app.advisor.verify@gmail.com',
                 [toEmail],
                 fail_silently=False,
 
             )
-            return Response("user created")
+            return Response("user created email sended")
         except:
             return Response("user created")
     else:
